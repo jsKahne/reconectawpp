@@ -10,17 +10,10 @@ const api = axios.create({
     }
 });
 
-// Log para verificar as configurações
-console.log('API Config:', {
-    baseURL: import.meta.env.VITE_EVOLUTION_BASE_URL,
-    apiKey: import.meta.env.VITE_EVOLUTION_API_KEY,
-});
 
 export const getInstances = async (): Promise<Instance[]> => {
     try {
-        console.log('Fazendo requisição para obter instâncias...');
         const response = await api.get('/instance/fetchInstances');
-        console.log('Resposta recebida:', response.data);
         return response.data;
 
     } catch (error) {
@@ -95,7 +88,7 @@ export const connectInstance = async (instanceName: string): Promise<{ qrcode?: 
         return await getQRCodeWithTimeout();
      
     } catch (error) {
-
+        console.log(error)
         return { state: 'close' };
     }
 };
@@ -103,12 +96,10 @@ export const connectInstance = async (instanceName: string): Promise<{ qrcode?: 
 export const checkInstanceConnection = async (instanceName: string): Promise<ConnectionState> => {
     try {
         const response = await api.get(`/instance/connectionState/${instanceName}`);
-        console.log(`Estado da conexão bruto para ${instanceName}:`, response.data);
 
         // Caso específico: se a resposta contém um objeto instance com state
         if (response.data?.instance?.state) {
             const instanceState = response.data.instance.state.toLowerCase();
-            console.log(`Estado encontrado no objeto instance: ${instanceState}`);
             
             if (instanceState.includes('open')) return 'open';
             if (instanceState.includes('pair')) return 'pairing';
@@ -119,8 +110,6 @@ export const checkInstanceConnection = async (instanceName: string): Promise<Con
         // Caso padrão: buscar estado diretamente
         const state = response.data?.state || response.data?.status || 'close';
         const normalizedState = state.toLowerCase();
-        
-        console.log(`Estado normalizado para ${instanceName}: ${normalizedState}`);
         
         if (normalizedState.includes('open')) return 'open';
         if (normalizedState.includes('pair')) return 'pairing';

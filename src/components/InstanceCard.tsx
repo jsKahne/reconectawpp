@@ -31,7 +31,6 @@ const InstanceCard = ({ instance, onConnect, onCheckConnection }: InstanceCardPr
             if (!loading) {
                 try {
                     const state = await onCheckConnection(instance.name);
-                    console.log(`Regular check for ${instance.name}: State = ${state}`);
                     setConnectionState(state);
 
                     if (isConnectionInitiated && state === 'open' && openQR) {
@@ -92,7 +91,6 @@ const InstanceCard = ({ instance, onConnect, onCheckConnection }: InstanceCardPr
 
         try {
             const result = await onConnect(instance.name);
-            console.log(`Initial connection result for ${instance.name}:`, result.state);
             setConnectionState(result.state);
 
             if (result.qrcode && result.state !== 'open') {
@@ -115,7 +113,6 @@ const InstanceCard = ({ instance, onConnect, onCheckConnection }: InstanceCardPr
                 setTimeout(async () => {
                     try {
                         const immediateState = await onCheckConnection(instance.name);
-                        console.log(`Immediate check for ${instance.name}:`, immediateState);
                         if (immediateState === 'open') {
                             setConnectionState(immediateState);
                             setLoading(false);
@@ -132,7 +129,6 @@ const InstanceCard = ({ instance, onConnect, onCheckConnection }: InstanceCardPr
                     // Dentro do objeto que contém checkIntervalRef.current = setInterval(async () => {...
                     try {
                         const state = await onCheckConnection(instance.name);
-                        console.log(`Check ${checkCount + 1} para ${instance.name}:`, state);
 
                         // Atualize o estado de conexão
                         setConnectionState(state);
@@ -140,10 +136,8 @@ const InstanceCard = ({ instance, onConnect, onCheckConnection }: InstanceCardPr
                         // Verifica se está realmente conectado
                         if (state === 'open') {
                             consecutiveOpenChecksRef.current += 1;
-                            console.log(`Verificação consecutiva OPEN #${consecutiveOpenChecksRef.current}`);
 
                             if (consecutiveOpenChecksRef.current >= 2) {
-                                console.log(`Confirmada conexão após ${consecutiveOpenChecksRef.current} verificações`);
                                 if (checkIntervalRef.current) {
                                     clearInterval(checkIntervalRef.current);
                                     checkIntervalRef.current = null;
@@ -157,14 +151,12 @@ const InstanceCard = ({ instance, onConnect, onCheckConnection }: InstanceCardPr
                         } else {
                             // Resetar contador se não estiver conectado
                             if (consecutiveOpenChecksRef.current > 0) {
-                                console.log('Estado não está mais aberto, resetando contador');
                                 consecutiveOpenChecksRef.current = 0;
                             }
                         }
 
                         setCheckCount(prev => {
                             const newCount = prev + 1;
-                            console.log(`Contador de verificações: ${newCount}/12`);
 
                             if (newCount >= 12) {
                                 if (checkIntervalRef.current) {

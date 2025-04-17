@@ -1,42 +1,6 @@
 version: '3.8'
 
 services:
-  traefik:
-    image: traefik:v2.9
-    command:
-      - "--api.insecure=true"
-      - "--providers.docker=true"
-      - "--entrypoints.web.address=:80"
-      - "--entrypoints.websecure.address=:443"
-      - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
-      - "--certificatesresolvers.letsencrypt.acme.email=you@example.com"  # altere conforme necessário
-      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
-    ports:
-      - "80:80"
-      - "443:443"
-      - "8080:8080"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./letsencrypt:/letsencrypt
-    networks:
-      - network_swarm_public
-
-  app:
-    build: .
-    image: reconectawpp:latest
-    environment:
-      - VITE_EVOLUTION_API_KEY=ST73WdmwZr7A6de9RrE7y8MBs6JQchZ8
-      - VITE_EVOLUTION_BASE_URL=https://api.supercaso.com.br
-    labels:
-      - "traefik.enable=true"
-      - "traefik.docker.network=network_swarm_public"
-      - "traefik.http.routers.reconecta-whatsapp.rule=Host(`connect.mlgrupo.com.br`)"
-      - "traefik.http.routers.reconecta-whatsapp.entrypoints=websecure"
-      - "traefik.http.routers.reconecta-whatsapp.tls.certresolver=letsencrypt"
-      - "traefik.http.services.reconecta-whatsapp.loadbalancer.server.port=91"
-    networks:
-      - network_swarm_public
-
   connect-wpp:
     image: reconecta-wpp:latest
     networks:
