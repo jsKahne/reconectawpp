@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   connect-wpp:
-    image: reconecta-wpp:latest
+    image: conectawpp:latest
     networks:
       - network_swarm_public
     deploy:
