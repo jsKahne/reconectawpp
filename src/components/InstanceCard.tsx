@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Dialog, DialogContent, DialogTitle, CircularProgress, Typography } from '@mui/material';
 import { Instance } from '../types/Instance';
 import ProfileIcon from './ProfileIcon';

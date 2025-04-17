@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Container, Typography, Box, CircularProgress, Alert, TextField } from '@mui/material';
 import InstanceCard from './components/InstanceCard';
 import { Instance } from './types/Instance';

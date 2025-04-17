@@ -47,9 +47,8 @@ export const connectInstance = async (instanceName: string): Promise<{ qrcode?: 
         const connectPromise = (async () => {
             try {
                 // Tenta desconectar primeiro
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                await api.delete(`/instance/logout/${instanceName}`).catch(err => {
-                    // Ignora erro de desconexão pois pode ser que a instância já esteja desconectada
+                await api.delete(`/instance/logout/${instanceName}`).catch(() => {
+                    // Handle error silently or log it
                 });
 
                 // Pequena pausa
@@ -94,7 +93,7 @@ export const connectInstance = async (instanceName: string): Promise<{ qrcode?: 
 
     try {
         return await getQRCodeWithTimeout();
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+     
     } catch (error) {
 
         return { state: 'close' };

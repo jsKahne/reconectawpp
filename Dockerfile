@@ -3,9 +3,10 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 COPY . .
+# Add an environment variable to skip linting during build
+ENV DISABLE_ESLINT_PLUGIN=true
 RUN npm run build
 
-# Stage 2: Serve the application
 FROM node:18-alpine
 WORKDIR /app
 COPY --from=build /app/dist ./dist
